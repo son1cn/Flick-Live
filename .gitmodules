@@ -1,0 +1,6 @@
+[submodule "modules/link-python"]
+	path = modules/link-python
+	url = https://github.com/gonzaloflirt/link-python
+[submodule "modules/Flick"]
+	path = modules/Flick
+	url = https://github.com/PiSupply/Flick
