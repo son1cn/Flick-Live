@@ -1,7 +1,7 @@
 # flick-link
  Flick setup to Ableton Link
 
-Pulling this repo
-<code>
+## Get:
+```
 git clone --recursive https://github.com/son1cn/Flick-link.git
-</code>
+```
