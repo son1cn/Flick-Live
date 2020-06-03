@@ -5,6 +5,7 @@ import sys
 import time
 import signal
 import time
+import threading
 #probably unecessary
 import curses
 from curses import wrapper
@@ -42,7 +43,76 @@ def tap(position):
 def touch(position):
     global touchtxt
     touchtxt = position
+  
+
+touchtxt = ''
+touchcount = 0
+taptxt = ''
+tapcount = 0
+flickcount = 0
+flicktxt = ''
+
+l = link.Link(120)
+l.enabled = True
+l.startStopSyncEnabled = True
+
+try:
+  while True:
+    s = l.captureSessionState()
+    link_time = l.clock().micros();
+    tempo_str = '{0:.2f}'.format(s.tempo())
+    beats_str = '{0:.2f}'.format(s.beatAtTime(link_time, 0))
+    playing_str = str(s.isPlaying())
+    phase = s.phaseAtTime(link_time, 4)
+    phase_str = ''
+    for x in range(0, 4):
+      if x < phase:
+        phase_str += 'X'
+      else:
+        phase_str += '0'
+    os.system('clear')
+    sys.stdout.write(
+      'tempo ' + tempo_str + ' | playing: ' + playing_str + ' | beats ' + beats_str
+      + ' | ' + phase_str + '  \r')
+    sys.stdout.flush()
+    time.sleep(0.2)
+    #tap test
+    if taptxt:
+        os.system('clear')
+        print(taptxt)
+    if len(taptxt) > 0 and tapcount < 5:
+        tapcount += 1
+    else:
+        taptxt = ''
+        tapcount = 0
+    print(taptxt)
     
+    if taptxt:
+        os.system('clear')
+        print(taptxt)
+        if taptxt == 'center':
+            if not s.isPlaying():
+                print("Should be playing")
+                s.setIsPlaying(True, link_time)  
+                print("should go up to 140bpm")
+                s.setTempo(140, link_time)
+                l.commitSessionState(s)
+            else:
+                print("Stopping playback")
+                s.setIsPlaying(False, link_time)  
+                print("should go to 120bpm")
+                s.setTempo(120, link_time)
+                l.commitSessionState(s)
+    if len(taptxt) > 0 and tapcount < 5:
+        tapcount += 1
+    else:
+        taptxt = ''
+        tapcount = 0
+        
+except KeyboardInterrupt:
+    exit(0)  
+    
+
 #the tests below output just flick, touch and tap messages to the stdout window using print
 touchtxt = ''
 touchcount = 0
@@ -82,32 +152,5 @@ try:
             tapcount = 0
 except KeyboardInterrupt:
     exit(0)
-
-
-while True:
-    l = link.Link(120)
-l.enabled = True
-l.startStopSyncEnabled = True
-
-try:
-  while True:
-    s = l.captureSessionState()
-    link_time = l.clock().micros();
-    tempo_str = '{0:.2f}'.format(s.tempo())
-    beats_str = '{0:.2f}'.format(s.beatAtTime(link_time, 0))
-    playing_str = str(s.isPlaying())
-    phase = s.phaseAtTime(link_time, 4)
-    phase_str = ''
-    for x in range(0, 4):
-      if x < phase:
-        phase_str += 'X'
-      else:
-        phase_str += '0'
-    sys.stdout.write(
-      'tempo ' + tempo_str + ' | playing: ' + playing_str + ' | beats ' + beats_str
-      + ' | ' + phase_str + '  \r')
-    sys.stdout.flush()
-    time.sleep(0.02)
-except KeyboardInterrupt:
-    pass
+    
 
