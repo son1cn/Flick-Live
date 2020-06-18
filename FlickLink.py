@@ -6,18 +6,12 @@ import time
 import signal
 import time
 import threading
-#probably unecessary
-import curses
-from curses import wrapper
-
-lib_dir = os.path.normpath(os.path.dirname(os.path.realpath(__file__)) + '/modules/link-python/lib/')
-sys.path.insert(0, lib_dir)
-#print(lib_dir)
 
 try:
-    import link
+    from osc4py3.as_eventloop import *
+    from osc4py3 import oscbuildparse
 except ImportError:
-    exit("Link is not properly installed")
+    exit("osc4py3 is not properly installed")
 
 
 lib_dir = os.path.normpath(os.path.dirname(os.path.realpath(__file__)) + '/modules/Flick/flick/')
@@ -44,7 +38,57 @@ def touch(position):
     global touchtxt
     touchtxt = position
   
+# Start the system.
+osc_startup()
 
+# Make client channels to send packets.
+#Need to figure out a way to use Computer name instead of IP
+#osc_udp_client("192.168.0.139", 9000, "aLive")
+osc_udp_client("NelsonL", 9000, "aLive")
+
+# Build a simple message and send it.
+#msg = oscbuildparse.OSCMessage("/live/play", None, ["text", 672, 8.871])
+#osc_send(msg, "aLive")
+#osc_process()
+
+
+#the tests below output just flick, touch and tap messages to the stdout window using print
+touchtxt = ''
+touchcount = 0
+taptxt = ''
+tapcount = 0
+flickcount = 0
+flicktxt = ''
+try:
+    while True:
+        #flick test
+        if flicktxt:
+            os.system('clear')
+            print(flicktxt)
+            if flicktxt == "south - north" and flickcount <3:
+                flickcount += 1
+            elif flickcount == 3:
+                # Build a simple message and send it.
+                print("Live should be playing")
+                msg = oscbuildparse.OSCMessage("/live/play", None, ["text", 672, 8.871])
+                osc_send(msg, "aLive")
+                osc_process()
+                flicktxt = ''
+                flickcount = 0
+        time.sleep(0.2)
+        #tap test
+        if taptxt:
+            os.system('clear')
+            print(taptxt)
+        if len(taptxt) > 0 and tapcount < 5:
+            tapcount += 1
+        else:
+            taptxt = ''
+            tapcount = 0
+except KeyboardInterrupt:
+    exit(0)
+
+#old Link testing
 touchtxt = ''
 touchcount = 0
 taptxt = ''
