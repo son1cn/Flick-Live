@@ -7,16 +7,6 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-#Cmake link-python 
-cd modules/link-python
-mkdir build
-cd build
-cmake ..
-cmake --build .
-
-#go back to starting folder
-cd ../../../
-
 #install Flick
 if [ ! $? = 0 ]; then
    exit 1
@@ -33,3 +23,6 @@ else
    whiptail --msgbox "The system will now reboot" 8 40
    reboot
 fi
+
+#install python3 and osc4
+
