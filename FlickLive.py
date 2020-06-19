@@ -52,24 +52,53 @@ touchtxt = ''
 touchcount = 0
 taptxt = ''
 tapcount = 0
-flickcount = 0
+flickupcount = 0
+flickdowncount = 0
+track = 0
 flicktxt = ''
+sendlvl = 0.0
 try:
     while True:
         #flick test
         if flicktxt:
             os.system('clear')
             print(flicktxt)
-            if flicktxt == "south - north" and flickcount <3:
-                flickcount += 1
-            elif flickcount == 3:
-                # Build a simple message and send it.
-                print("Live should be playing")
-                msg = oscbuildparse.OSCMessage("/live/play", None, ["text", 672, 8.871])
-                osc_send(msg, "aLive")
+            if flicktxt == "south - north" and flickupcount <3:
+                flickupcount += 1
+            elif flickupcount == 3:
+                if sendlvl < 1.0:
+                    sendlvl += 0.1
+                #increase sendlvl by 10% and send to Ableton
+                msg0 = oscbuildparse.OSCMessage("/live/send", ",iif", [track, 0, sendlvl])
+                msg1 = oscbuildparse.OSCMessage("/live/send", ",iif", [track, 1, sendlvl])
+                bun = oscbuildparse.OSCBundle(oscbuildparse.unixtime2timetag(time.time()),
+                    [msg0, msg1])
+                print("Increasing track " , track , " to " , sendlvl)
+                #print("Live should be playing")
+                #msg just to play
+                #msg = oscbuildparse.OSCMessage("/live/play", None, ["play"])
+                osc_send(bun, "aLive")
                 osc_process()
                 flicktxt = ''
-                flickcount = 0
+                flickupcount = 0
+            if flicktxt == "north - south" and flickdowncount <3:
+                flickdowncount += 1
+            elif flickdowncount == 3:
+                if sendlvl > 0.0:
+                    sendlvl -= 0.1
+                #decrease sendlvl by 10% and send to Ableton
+                msg0 = oscbuildparse.OSCMessage("/live/send", ",iif", [track, 0, sendlvl])
+                msg1 = oscbuildparse.OSCMessage("/live/send", ",iif", [track, 1, sendlvl])
+                bun = oscbuildparse.OSCBundle(oscbuildparse.unixtime2timetag(time.time()),
+                    [msg0, msg1])
+                print("Decreasing track " , track , " to " , sendlvl)
+                #print("Live should be playing")
+                #msg just to play
+                #msg = oscbuildparse.OSCMessage("/live/play", None, ["play"])
+                osc_send(bun, "aLive")
+                osc_process()
+                flicktxt = ''
+                flickdowncount = 0
         time.sleep(0.2)
         #tap test
         if taptxt:
