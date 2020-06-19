@@ -13,10 +13,9 @@ try:
 except ImportError:
     exit("osc4py3 is not properly installed")
 
-
+#grab flick module from the relative location
 lib_dir = os.path.normpath(os.path.dirname(os.path.realpath(__file__)) + '/modules/Flick/flick/')
 sys.path.insert(0, lib_dir)
-#print(lib_dir)
 
 try:
     import flicklib
@@ -46,7 +45,6 @@ osc_startup()
 osc_udp_client("NelsonL", 9000, "aLive")
 #osc_udp_client("DESKTOP-AFDTU4J", 9000, "aLive")
 
-
 #the tests below output just flick, touch and tap messages to the stdout window using print
 touchtxt = ''
 touchcount = 0
@@ -74,9 +72,6 @@ try:
                 bun = oscbuildparse.OSCBundle(oscbuildparse.unixtime2timetag(time.time()),
                     [msg0, msg1])
                 print("Increasing track " , track , " to " , sendlvl)
-                #print("Live should be playing")
-                #msg just to play
-                #msg = oscbuildparse.OSCMessage("/live/play", None, ["play"])
                 osc_send(bun, "aLive")
                 osc_process()
                 flicktxt = ''
@@ -86,31 +81,37 @@ try:
             elif flickdowncount == 3:
                 if sendlvl > 0.0:
                     sendlvl -= 0.1
-                #decrease sendlvl by 10% and send to Ableton
+                #decrease sendlvl by 10% and send to Ableton on both sends
                 msg0 = oscbuildparse.OSCMessage("/live/send", ",iif", [track, 0, sendlvl])
                 msg1 = oscbuildparse.OSCMessage("/live/send", ",iif", [track, 1, sendlvl])
                 bun = oscbuildparse.OSCBundle(oscbuildparse.unixtime2timetag(time.time()),
                     [msg0, msg1])
                 print("Decreasing track " , track , " to " , sendlvl)
-                #print("Live should be playing")
-                #msg just to play
-                #msg = oscbuildparse.OSCMessage("/live/play", None, ["play"])
                 osc_send(bun, "aLive")
                 osc_process()
                 flicktxt = ''
                 flickdowncount = 0
         time.sleep(0.2)
-        #tap test
-        if taptxt:
-            os.system('clear')
-            print(taptxt)
-        if len(taptxt) > 0 and tapcount < 5:
-            tapcount += 1
-        else:
-            taptxt = ''
-            tapcount = 0
 except KeyboardInterrupt:
+    osc_terminate()
     exit(0)
+
+#should not reach any of this code
+
+#print("Live should be playing")
+#msg just to play
+#msg = oscbuildparse.OSCMessage("/live/play", None, ["play"])
+
+#tap test
+if taptxt:
+    os.system('clear')
+    print(taptxt)
+if len(taptxt) > 0 and tapcount < 5:
+    tapcount += 1
+else:
+    taptxt = ''
+    tapcount = 0
+
 
 #old Link testing
 touchtxt = ''
