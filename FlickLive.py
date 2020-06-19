@@ -42,14 +42,9 @@ def touch(position):
 osc_startup()
 
 # Make client channels to send packets.
-#Need to figure out a way to use Computer name instead of IP
-#osc_udp_client("192.168.0.139", 9000, "aLive")
+#Can use windows computer hostname instead of IP
 osc_udp_client("NelsonL", 9000, "aLive")
-
-# Build a simple message and send it.
-#msg = oscbuildparse.OSCMessage("/live/play", None, ["text", 672, 8.871])
-#osc_send(msg, "aLive")
-#osc_process()
+#osc_udp_client("DESKTOP-AFDTU4J", 9000, "aLive")
 
 
 #the tests below output just flick, touch and tap messages to the stdout window using print

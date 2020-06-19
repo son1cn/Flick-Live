@@ -28,6 +28,8 @@ https://github.com/ideoforms/LiveOSC
 Needs to be installed on Live PC (not the Pi)
 
 
+https://github.com/ideoforms/LiveOSC/blob/master/OSCAPI.txt
+
 
 
 
