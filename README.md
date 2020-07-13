@@ -16,16 +16,18 @@ Ableton Link is not the tool that we need. We need to emulate something that Liv
 Flick requires python 3.7.3, 3.8 doesn't seem to work
 
 Installing osc4py3 manually
-
+https://pypi.org/project/osc4py3/
 ```
 pip3 install osc4py3
 ```
 https://osc4py3.readthedocs.io/en/latest/userdoc.html#simple-use
 
-
+LiveOSC for MIDI control in Ableton Live
 https://github.com/ideoforms/LiveOSC
+*Needs to be installed on Live PC (not the Pi)
 
-Needs to be installed on Live PC (not the Pi)
+List of OSC commands
+https://github.com/ideoforms/LiveOSC/blob/master/OSCAPI.txt
 
 
 
