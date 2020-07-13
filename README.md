@@ -30,6 +30,8 @@ List of OSC commands
 https://github.com/ideoforms/LiveOSC/blob/master/OSCAPI.txt
 
 
+https://github.com/ideoforms/LiveOSC/blob/master/OSCAPI.txt
+
 
 
 
